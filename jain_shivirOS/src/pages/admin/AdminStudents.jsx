@@ -136,6 +136,15 @@ export default function AdminStudents() {
         }
         return true;
       }) && (selectedClass === 'all' || String(s.class || '').trim() === selectedClass);
+    }).sort((a, b) => {
+      const rollA = String(a.roll_no || '').trim();
+      const rollB = String(b.roll_no || '').trim();
+      if (rollA && rollB) {
+        return rollA.localeCompare(rollB, undefined, { numeric: true, sensitivity: 'base' });
+      }
+      if (rollA) return -1;
+      if (rollB) return 1;
+      return a.name.localeCompare(b.name);
     });
   }, [students, searchQ, activeFilters, selectedClass]);
 
