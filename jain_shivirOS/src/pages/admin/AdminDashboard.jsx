@@ -16,8 +16,14 @@ export default function AdminDashboard() {
   const todayTx = transactions.filter(tx => tx.day === currentDay);
   const pointsToday = todayTx.filter(tx => tx.points > 0).reduce((s, tx) => s + tx.points, 0);
   const specialToday = getActivitiesForDay(currentDay).filter(a => a.type === 'special').length;
-  const checkedInGirls = students.filter(s => s.checked_in && String(s.gender || '').toLowerCase() === 'girl').length;
-  const checkedInBoys = students.filter(s => s.checked_in && String(s.gender || '').toLowerCase() === 'boy').length;
+  const checkedInGirls = students.filter(s => {
+    const g = String(s.gender || '').toLowerCase();
+    return s.checked_in && (g === 'girl' || g === 'female' || g === 'f');
+  }).length;
+  const checkedInBoys = students.filter(s => {
+    const g = String(s.gender || '').toLowerCase();
+    return s.checked_in && (g === 'boy' || g === 'male' || g === 'm');
+  }).length;
 
   const poolPct = Math.min(100, (stats.availableNow / stats.totalPool) * 100);
   const recentTx = transactions.slice(0, 8);

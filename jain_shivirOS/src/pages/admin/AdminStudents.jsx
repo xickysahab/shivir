@@ -19,8 +19,8 @@ const CSV_HEADERS = [
 ];
 
 const TEMPLATE_ROWS = [
-  ['B001', 'CAMP-2026-XXXXX', 'Arham Jain', 'Boy',  '9', '2016-06-26', 'Bhag-1', '1A', 'D1', 'Vikram Jain', 'Preeti Jain', '9179105875', '9179105875', 'Indore', '452001', '12 MG Road, Indore',      'Indore Pathshala', 'State Quiz Winner', 'Teacher 1A'],
-  ['G001', 'CAMP-2026-YYYYY', 'Aarvi Jain', 'Girl', '9', '2016-07-03', 'Bhag-1', '1B', 'F3', 'Sachin Jain', 'Ritu Jain',   '7067514988', '7067514988', 'Bhopal', '462001', '45 Arera Colony, Bhopal', '',                 '',                  'Teacher 1B'],
+  ['B001', 'CAMP-2026-XXXXX', 'Arham Jain', 'Male', '9', '2016-06-26', 'Bhag-1', '1A', 'D1', 'Vikram Jain', 'Preeti Jain', '9179105875', '9179105875', 'Indore', '452001', '12 MG Road, Indore', 'Indore Pathshala', 'State Quiz Winner', 'Teacher 1A'],
+  ['G001', 'CAMP-2026-YYYYY', 'Aarvi Jain', 'Female', '9', '2016-07-03', 'Bhag-1', '1B', 'F3', 'Sachin Jain', 'Ritu Jain', '7067514988', '7067514988', 'Bhopal', '462001', '45 Arera Colony, Bhopal', '', '', 'Teacher 1B'],
 ];
 
 const STUDENT_FILTERS = [
@@ -136,15 +136,6 @@ export default function AdminStudents() {
         }
         return true;
       }) && (selectedClass === 'all' || String(s.class || '').trim() === selectedClass);
-    }).sort((a, b) => {
-      const rollA = String(a.roll_no || '').trim();
-      const rollB = String(b.roll_no || '').trim();
-      if (rollA && rollB) {
-        return rollA.localeCompare(rollB, undefined, { numeric: true, sensitivity: 'base' });
-      }
-      if (rollA) return -1;
-      if (rollB) return 1;
-      return a.name.localeCompare(b.name);
     });
   }, [students, searchQ, activeFilters, selectedClass]);
 
@@ -422,18 +413,18 @@ export default function AdminStudents() {
             </div>
             <div className="px-6 py-4 grid grid-cols-2 md:grid-cols-3 gap-3">
               {[
-                { key: 'roll_no',      label: 'Roll No.',             required: true  },
-                { key: 'name',         label: 'Name (English)',        required: true  },
-                { key: 'mobile',       label: 'Mobile',                required: false },
-                { key: 'age',          label: 'Age',                   required: false },
-                { key: 'group',        label: 'Class Teacher',         required: false },
-                { key: 'parent_name',  label: 'Father Name',           required: false },
-                { key: 'mother_name',  label: 'Mother Name',           required: false },
-                { key: 'reg_id',       label: 'Reg ID',                required: false },
-                { key: 'city',         label: 'City',                  required: false },
-                { key: 'pin_code',     label: 'Pin Code',              required: false },
-                { key: 'pathshala',    label: 'Pathshala Name',        required: false },
-                { key: 'achievements', label: 'Achievements',          required: false },
+                { key: 'roll_no', label: 'Roll No.', required: true },
+                { key: 'name', label: 'Name (English)', required: true },
+                { key: 'mobile', label: 'Mobile', required: false },
+                { key: 'age', label: 'Age', required: false },
+                { key: 'group', label: 'Class Teacher', required: false },
+                { key: 'parent_name', label: 'Father Name', required: false },
+                { key: 'mother_name', label: 'Mother Name', required: false },
+                { key: 'reg_id', label: 'Reg ID', required: false },
+                { key: 'city', label: 'City', required: false },
+                { key: 'pin_code', label: 'Pin Code', required: false },
+                { key: 'pathshala', label: 'Pathshala Name', required: false },
+                { key: 'achievements', label: 'Achievements', required: false },
               ].map(f => (
                 <div key={f.key}>
                   <label className="block text-xs font-semibold text-gray-600 mb-1">
@@ -545,63 +536,63 @@ export default function AdminStudents() {
             ? (getTeacherNameForClass(s.class, true) || s.group || '—')
             : (s.group || getTeacherNameForClass(s.class, false) || '—');
           return (
-          <div key={s.id} className="bg-white border border-gray-200 rounded-2xl p-3 shadow-sm">
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <div className="text-xs text-gray-500 font-mono">{s.roll_no}</div>
-                <div className="font-semibold text-gray-900 truncate">{s.name}</div>
+            <div key={s.id} className="bg-white border border-gray-200 rounded-2xl p-3 shadow-sm">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="text-xs text-gray-500 font-mono">{s.roll_no}</div>
+                  <div className="font-semibold text-gray-900 truncate">{s.name}</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-[11px] text-gray-500">Points</div>
+                  <div className="font-bold text-saffron-600">{s.total_points}</div>
+                </div>
               </div>
-              <div className="text-right">
-                <div className="text-[11px] text-gray-500">Points</div>
-                <div className="font-bold text-saffron-600">{s.total_points}</div>
-              </div>
-            </div>
 
-            <div className="mt-2 flex flex-wrap gap-1.5">
-              <span className="px-2 py-0.5 rounded-full text-[11px] bg-forest-100 text-forest-700 font-semibold">
-                {s.batch || 'No Book'}
-              </span>
-              {s.class && (
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                <span className="px-2 py-0.5 rounded-full text-[11px] bg-forest-100 text-forest-700 font-semibold">
+                  {s.batch || 'No Book'}
+                </span>
+                {s.class && (
+                  <span className="px-2 py-0.5 rounded-full text-[11px] bg-saffron-100 text-saffron-700 font-semibold">
+                    Class {s.class}
+                  </span>
+                )}
+                {s.room_no && (
+                  <span className="px-2 py-0.5 rounded-full text-[11px] bg-amber-100 text-amber-700 font-semibold">
+                    🏠 {s.room_no}
+                  </span>
+                )}
+                <span className="px-2 py-0.5 rounded-full text-[11px] bg-gray-100 text-gray-700">
+                  {s.gender || 'No Gender'}
+                </span>
+                <span className="px-2 py-0.5 rounded-full text-[11px] bg-gray-100 text-gray-700">
+                  Age {s.age || '—'}
+                </span>
                 <span className="px-2 py-0.5 rounded-full text-[11px] bg-saffron-100 text-saffron-700 font-semibold">
-                  Class {s.class}
+                  {s.class || 'No Class'}
                 </span>
-              )}
-              {s.room_no && (
-                <span className="px-2 py-0.5 rounded-full text-[11px] bg-amber-100 text-amber-700 font-semibold">
-                  🏠 {s.room_no}
+                <span className={`px-2 py-0.5 rounded-full text-[11px] ${s.kit_given ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
+                  {s.kit_given ? 'Kit Given' : 'Kit Pending'}
                 </span>
-              )}
-              <span className="px-2 py-0.5 rounded-full text-[11px] bg-gray-100 text-gray-700">
-                {s.gender || 'No Gender'}
-              </span>
-              <span className="px-2 py-0.5 rounded-full text-[11px] bg-gray-100 text-gray-700">
-                Age {s.age || '—'}
-              </span>
-              <span className="px-2 py-0.5 rounded-full text-[11px] bg-saffron-100 text-saffron-700 font-semibold">
-                {s.class || 'No Class'}
-              </span>
-              <span className={`px-2 py-0.5 rounded-full text-[11px] ${s.kit_given ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
-                {s.kit_given ? 'Kit Given' : 'Kit Pending'}
-              </span>
-            </div>
-            <div className="mt-1 text-xs text-gray-500 truncate">Teacher: {displayTeacher}</div>
+              </div>
+              <div className="mt-1 text-xs text-gray-500 truncate">Teacher: {displayTeacher}</div>
 
-            <div className="mt-2 text-xs text-gray-600 truncate">
-              Mobile: {s.mobile || '—'}
-            </div>
-            <div className="text-xs text-gray-600 truncate">
-              Father: {getFatherName(s) || '—'}
-            </div>
+              <div className="mt-2 text-xs text-gray-600 truncate">
+                Mobile: {s.mobile || '—'}
+              </div>
+              <div className="text-xs text-gray-600 truncate">
+                Father: {getFatherName(s) || '—'}
+              </div>
 
-            <div className="mt-3 flex gap-2">
-              <button onClick={() => handleEdit(s)} className="flex-1 py-2 rounded-xl border border-blue-200 text-blue-700 text-xs font-semibold">
-                {t('common.edit')}
-              </button>
-              <button onClick={() => setDeleteId(s.id)} className="flex-1 py-2 rounded-xl border border-red-200 text-red-600 text-xs font-semibold">
-                {t('common.delete')}
-              </button>
+              <div className="mt-3 flex gap-2">
+                <button onClick={() => handleEdit(s)} className="flex-1 py-2 rounded-xl border border-blue-200 text-blue-700 text-xs font-semibold">
+                  {t('common.edit')}
+                </button>
+                <button onClick={() => setDeleteId(s.id)} className="flex-1 py-2 rounded-xl border border-red-200 text-red-600 text-xs font-semibold">
+                  {t('common.delete')}
+                </button>
+              </div>
             </div>
-          </div>
           );
         })}
         {filtered.length === 0 && (
@@ -639,41 +630,41 @@ export default function AdminStudents() {
                   ? (s.group_hi || getTeacherNameForClass(s.class, true) || s.group || '—')
                   : (s.group || getTeacherNameForClass(s.class, false) || s.group_hi || '—');
                 return (
-                <tr key={s.id} className={`border-b last:border-0 ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
-                  <td className="px-4 py-3 font-mono text-xs text-gray-600">{s.roll_no}</td>
-                  <td className="px-4 py-3 font-semibold text-gray-900">{s.name}</td>
-                  <td className="px-4 py-3 text-gray-600 text-xs">{s.gender || '—'}</td>
-                  <td className="px-4 py-3 text-gray-600 text-xs">{s.age || '—'}</td>
-                  <td className="px-4 py-3">
-                    <span className="bg-forest-100 text-forest-700 px-2 py-0.5 rounded-full text-xs font-semibold">{s.batch || '—'}</span>
-                  </td>
-                  <td className="px-4 py-3">
-                    {s.class
-                      ? <span className="bg-saffron-100 text-saffron-700 px-2 py-0.5 rounded-full text-xs font-semibold">{s.class}</span>
-                      : <span className="text-gray-400 text-xs">—</span>}
-                  </td>
-                  <td className="px-4 py-3">
-                    {s.room_no
-                      ? <span className="bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full text-xs font-semibold">{s.room_no}</span>
-                      : <span className="text-gray-400 text-xs">—</span>}
-                  </td>
-                  <td className="px-4 py-3 text-gray-600 text-xs">{displayTeacher}</td>
-                  <td className="px-4 py-3 text-gray-600 text-xs">{getFatherName(s) || '—'}</td>
-                  <td className="px-4 py-3 text-gray-600 text-xs">{s.mobile || '—'}</td>
-                  <td className="px-4 py-3 text-center">
-                    {s.health_issue ? <span className="text-red-500 font-bold text-xs">⚠️ Yes</span> : <span className="text-gray-400 text-xs">—</span>}
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                    {s.kit_given ? <span className="text-green-600 font-bold text-xs">✅</span> : <span className="text-amber-500 text-xs">📦</span>}
-                  </td>
-                  <td className="px-4 py-3 font-bold text-saffron-600">{s.total_points}</td>
-                  <td className="px-4 py-3">
-                    <div className="flex gap-2">
-                      <button onClick={() => handleEdit(s)} className="text-blue-600 hover:underline text-xs font-semibold">{t('common.edit')}</button>
-                      <button onClick={() => setDeleteId(s.id)} className="text-red-500 hover:underline text-xs font-semibold">{t('common.delete')}</button>
-                    </div>
-                  </td>
-                </tr>
+                  <tr key={s.id} className={`border-b last:border-0 ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                    <td className="px-4 py-3 font-mono text-xs text-gray-600">{s.roll_no}</td>
+                    <td className="px-4 py-3 font-semibold text-gray-900">{s.name}</td>
+                    <td className="px-4 py-3 text-gray-600 text-xs">{s.gender || '—'}</td>
+                    <td className="px-4 py-3 text-gray-600 text-xs">{s.age || '—'}</td>
+                    <td className="px-4 py-3">
+                      <span className="bg-forest-100 text-forest-700 px-2 py-0.5 rounded-full text-xs font-semibold">{s.batch || '—'}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      {s.class
+                        ? <span className="bg-saffron-100 text-saffron-700 px-2 py-0.5 rounded-full text-xs font-semibold">{s.class}</span>
+                        : <span className="text-gray-400 text-xs">—</span>}
+                    </td>
+                    <td className="px-4 py-3">
+                      {s.room_no
+                        ? <span className="bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full text-xs font-semibold">{s.room_no}</span>
+                        : <span className="text-gray-400 text-xs">—</span>}
+                    </td>
+                    <td className="px-4 py-3 text-gray-600 text-xs">{displayTeacher}</td>
+                    <td className="px-4 py-3 text-gray-600 text-xs">{getFatherName(s) || '—'}</td>
+                    <td className="px-4 py-3 text-gray-600 text-xs">{s.mobile || '—'}</td>
+                    <td className="px-4 py-3 text-center">
+                      {s.health_issue ? <span className="text-red-500 font-bold text-xs">⚠️ Yes</span> : <span className="text-gray-400 text-xs">—</span>}
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      {s.kit_given ? <span className="text-green-600 font-bold text-xs">✅</span> : <span className="text-amber-500 text-xs">📦</span>}
+                    </td>
+                    <td className="px-4 py-3 font-bold text-saffron-600">{s.total_points}</td>
+                    <td className="px-4 py-3">
+                      <div className="flex gap-2">
+                        <button onClick={() => handleEdit(s)} className="text-blue-600 hover:underline text-xs font-semibold">{t('common.edit')}</button>
+                        <button onClick={() => setDeleteId(s.id)} className="text-red-500 hover:underline text-xs font-semibold">{t('common.delete')}</button>
+                      </div>
+                    </td>
+                  </tr>
                 );
               })}
             </tbody>
